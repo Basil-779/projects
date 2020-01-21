@@ -80,7 +80,7 @@ try {
     $DB_REQ = $DB_PDO->prepare("CREATE TABLE IF NOT EXISTS likes (
             id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
             id_belong int(11) NOT NULL,
-            id_liked int(11) NOT NULL)
+            id_liker int(11) NOT NULL)
         ");
     $DB_REQ->execute();
     $DB_REQ = $DB_PDO->prepare("ALTER TABLE likes ADD FOREIGN KEY (id_belong) REFERENCES users(id) ON DELETE CASCADE;");
@@ -90,7 +90,7 @@ try {
     $DB_REQ = $DB_PDO->prepare("CREATE TABLE IF NOT EXISTS blocks (
             id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
             id_belong int(11) NOT NULL,
-            id_blocked int(11) NOT NULL)
+            id_blocker int(11) NOT NULL)
     ");
     $DB_REQ->execute();
     $DB_REQ = $DB_PDO->prepare("ALTER TABLE blocks ADD FOREIGN KEY (id_belong) REFERENCES users(id) ON DELETE CASCADE;");

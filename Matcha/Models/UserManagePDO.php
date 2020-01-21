@@ -441,12 +441,282 @@ class UserManagePDO extends UserManager
 
         return NULL;
     }
+    public function getVisits($id_belong)
+    {
+        if (!empty($id_belong))
+        {
+            $DB_REQ = $this->DB_REQ->prepare('
+            SELECT id_belong, users.login FROM visitors INNER JOIN users ON
+            users.id = visitors.id_visitor WHERE id_belong = :id_belong ORDER BY DESC LIMIT 5;
+            ');
+            $DB_REQ->bindValue(':id_belong', $id_belong, PDO::PARAM_INT);
+            $DB_REQ->execute();
+            $data = $DB_REQ->fetchAll(PDO::FETCH_ASSOC);
 
-    
+            foreach ($data as $key => $value)
+            {
+                $data[$key] = array_merge($value, array("origin" => "visit"));
+            }
+            return $data;
+        }
+        return NULL;
+    }
 
+    public function like($id_liker, $id_liked)
+    {
+        $DB_REQ = $this->DB_REQ->prepare('
+        INSERT INTO likes (id_belong, id_liked)
+        VALUES (:id_liker, :id_liked)
+        ');
+        $DB_REQ->bindValue(':id_liker', $id_liker, PDO::PARAM_INT);
+        $DB_REQ->bindValue(':id_liked', $id_liked, PDO::PARAM_INT);
 
+        $DB_REQ->execute();
+        $DB_REQ = $this->DB_REQ->query('SELECT LAST_INSERT_ID()');
+        $lastId = $DB_REQ->fetch(PDO::FETCH_ASSOC);
+        $DB_REQ->closeCursor();
 
+        $DB_REQ = $this->DB_REQ->prepare('
+        UPDATE scores SET score = score + 2 WHERE id_belong = :id_belong
+        ');
+        $DB_REQ->bindValue(':id_belong', $id_liked, PDO::PARAM_INT);
+        $DB_REQ->execute();
+        return $lastId;
+    }
 
+    public function dislike($id_disliker, $id_disliked)
+    {
+        $DB_REQ = $this->DB_REQ->prepare('
+        DELETE FROM likes WHERE id_belong = :id_disliked AND id_liker = :id_disliker
+        ');
+        $DB_REQ->bindValue(':id_disliker', $id_disliker, PDO::PARAM_INT);
+        $DB_REQ->bindValue(':id_disliked', $id_disliked, PDO::PARAM_INT);
+        $DB_REQ->execute();
+
+        $DB_REQ->closeCursor();
+
+        $DB_REQ = $this->DB_REQ->prepare('
+        UPDATE scores SET score = score - 2 WHERE id_belong = :id_belong
+        ');
+        $DB_REQ->bindValue(':id_belong', $id_belong, PDO::PARAM_INT);
+        $DB_REQ->execute();
+    }
+
+    public function getLikes($id_belong)
+    {
+        if(!empty($id_belong))
+        {
+            $DB_REQ = $this->DB_REQ->prepare('
+            SELECT id_belong, users.login FROM likes INNER JOIN users ON
+            users.id = likes.id_belong WHERE id_belong = :id_belong
+            ORDER BY DESC LIMIT 5;
+            ');
+            $DB_REQ->bindValue(':id_belong', $id_belong, PDO::PARAM_INT);
+            $DB_REQ->execute();
+            $data = $DB_REQ->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach ($data as $key => $value)
+            {
+                $data[$key] = array_merge($value, array("origin" => "like"));
+            }
+            return $data;
+        }
+        return NULL;
+    }
+
+    public function mutualFriendlist(User $user, User $userprofile)
+    {
+        if ($user)
+        {
+            $DB_REQ = $this->DB_REQ->prepare('
+            SELECT a.id_liker, a.id-belong FROM likes AS a 
+            INNER JOIN likes AS b
+            ON a.id_liker = b.id_belong AND b.id_liker = a.id_belong
+            ');
+            $DB_REQ->bindValue(':id_liker', (int)$user->id(), PDO::PARAM_INT);
+            $DB_REQ->bindValue(':if_belong', (int)$userprofile->id(), PDO::PARAM_INT);
+            $DB_REQ->execute();
+            $data = $DB_REQ->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($data as $value)
+            {
+                if($value['id_liker'] == $user->id() && $value['id_belong'] == $userprofile->id())
+                {
+                    return TRUE;
+                }
+            }
+        }
+        return FALSE;
+    }
+
+    public function hasLiked(User $user1, User $user2)
+    {
+        $DB_REQ = $this->DB_REQ->prepare('
+        SELECT COUNT(*) AS count FROM likes 
+        WHERE id_liker = :user2 AND id_belong = :user1;
+        ');
+        $DB_REQ->bindValue(':user2', $user2->id());
+        $DB_REQ->bindValue(':user1', $user1->id());
+        $DB_REQ->execute();
+        $result = $DB_REQ->fetch(PDO::FETCH_ASSOC);
+
+        if (intval($result['count']) == 0)
+        {
+            return FALSE;
+        }
+        return TRUE;
+    }
+
+    public function block($id_blocker, $id_blocked)
+    {
+        $DB_REQ = $this->DB_REQ->prepare('
+        INSERT INTO blocks (id_belong, id_blocker)
+        VALUES (:id_blocked, :id_blocker)
+        ');
+        $DB_REQ->bindValue(':id_blocked', $id_blocked, PDO::PARAM_INT);
+        $DB_REQ->bindValue(':id_blocker', $id_blocker, PDO::PARAM_INT);
+        $DB_REQ->execute();
+    }
+
+    public function unblock($id_unblocker, $id_unblocked)
+    {
+        $DB_REQ = $this->DB_REQ->prepare('
+        DELETE FROM blocks
+        WHERE id_belong = :id_unblocked AND id_blocker = :id_unblocker
+        ');
+        $DB_REQ->bindValue(':id_unblocked', $id_unblocked, PDO::PARAM_INT);
+        $DB_REQ->bindValue(':id_unblocker', $id_unblocker, PDO::PARAM_INT);
+        $DB_REQ->execute();
+
+        if ($DB_REQ)
+            {return TRUE;}
+        return FALSE;
+    }
+
+    public function canLike($id_liker, $id_liked)
+    {
+        if (!empty($id_liker) && !empty($id_liked))
+        {
+            $DB_REQ = $this->DB_REQ->prepare('
+            SELECT id_liker FROM likes
+            WHERE id_belong = :id_belong AND id_liker = :id_liker
+            ');
+            $DB_REQ->bindValue(':id_belong', $id_liked, PDO::PARAM_INT);
+            $DB_REQ->bindValue(':id_liker', $id_liker, PDO::PARAM_INT);
+            $DB_REQ->execute();
+
+            $data = $DB_REQ->fetch(PDO::FETCH_ASSOC);
+            if ($data['id_liker'])
+            {
+                return FALSE;
+            }
+            else
+            {
+                return TRUE;
+            }
+
+        }
+        return NULL;
+    }
+
+    public function canBlock($id_blocker, $id_blocked)
+    {
+        if (!empty($id_blocker) && !empty($id_blocked))
+        {
+            $DB_REQ = $this->DB_REQ->prepare('
+            SELECT id_blocker FROM blocks WHERE id_belong = :id_belong 
+            AND id_blocker = :id_blocker
+            ');
+            $DB_REQ->bindValue(':id_blocker', $id_blocker, PDO::PARAM_INT);
+            $DB_REQ->bindValue(':id_belong', $id_blocked, PDO::PARAM_INT);
+            $DB_REQ->execute();
+
+            $data = $DB_REQ->fetch(PDO::FETCH_ASSOC);
+
+            if($data['id_blocker'])
+            {
+                return FALSE;
+            }
+            else
+            {
+                return TRUE;
+            }
+        }
+        return NULL;
+    }
+
+    public function getBlockedUsers($id_blocker)
+    {
+        $DB_REQ = $this->DB_REQ->prepare('
+        SELECT id_belong FROM blocks WHERE id_blocker = :id_blocker
+        ');
+        $DB_REQ->bindValue(':id_blocker', $id_blocker, PDO::PARAM_INT);
+        $DB_REQ->execute();
+        $data = $DB_REQ->fetchAll(PDO::FETCH_ASSOC);
+        return $data;
+    }
+
+    public function countSimilarTags(User $user, User $user_to_compare)
+    {
+        $tags = $user->tags();
+        $tags_to_compare = $user_to_compare->tags();
+
+        $count = count(array_intersect($tags, $tags_to_compare));
+        return $count;
+    }
+
+    public function getMatches(User $user, $distance)
+    {
+        if (!empty($user))
+        {
+            $gender = $user->gender();
+            $sexuality = $user->sexuality();
+
+            $DB_REQ = $this->DB_REQ->prepare('
+            SELECT * FROM
+            (
+                SELECT a.login AS from_user, b.login AS to_user, b.id AS to_user_id, b.gender, pictures.src AS to_user_pic, b.sexuality AS to_user_sexuality, b.age as to_user_age, scores.score AS popularity,
+                    ROUND(111.1111 * 
+                    DEGREES(ACOS(COS(RADIANS(a.Latitude))
+                    * COS(RADIANS(b.Latitude))
+                    * COS(RADIANS(a.Latitude - b.Longitude))
+                    + SIN(RADIANS(a.Latitude))
+                    * SIN(RADIANS(b.Latitude)))), 2) AS distance_in_km
+            FROM users AS a
+            JOIN users AS b ON a.id <> b.id
+
+            INNER JOIN pictures
+            ON pictures.id_belong = b.id AND mainpic = 1
+
+            INNER JOIN scores
+            ON scores.id_belong = b.id
+
+            WHERE a.login = :from_user AND CASE
+                WHEN a.sexuality = "hetero" AND a.gender = "m" THEN b.gender = "f" AND b.sexuality NOT IN ("homo")
+                WHEN a.sexuality = "hetero" AND a.gender = "f" THEN b.gender = "m" AND b.sexuality NOT IN ("homo")
+
+                WHEN a.sexuality = "homo" AND a.gender = "m" THEN b.gender = "m" AND b.sexuality NOT IN ("hetero")
+                WHEN a.sexuality = "homo" AND a.gender = "f" THEN b.gender = "f" AND b.sexuality NOT IN ("hetero")
+
+                WHEN a.sexuality = "bisexual" AND a.gender = "m" THEN (b.gender = "f" AND b.sexuality NOT IN ("homo")) OR (b.gender = "m" AND b.sexuality NOT IN ("hetero"))
+                WHEN a.sexuality = "bisexual" AND a.gender = "f" THEN (b.gender = "f" AND b.sexuality NOT IN ("hetero")) OR (b.gender = "m" AND b.sexuality NOT IN ("homo"))
+                END
+            AND EXISTS(SELECT * FROM pictures WHERE mainpic = 1)
+            AND NOT EXISTS(SELECT * FROM blocks WHERE
+                blocks.id_belong = b.id AND blocks.id_blocker = a.id 
+                OR
+                blocks.id_belong = a.id AND blocks.id_blocker = b.id)
+            ORDER BY distance_in_km, cast(scores AS UNSIGNED) DESC
+            )
+            AS inner_table
+            WHERE distance_in_km < :distance
+            ');
+            $DB_REQ->bindValue(':from_user', $user->login());
+            $DB_REQ->bindValue(':distance', $distance, PDO::PARAM_INT);
+            $DB_REQ->execute();
+            $data = $DB_REQ->fetchAll(PDO::FETCH_ASSOC);
+
+            return $data;
+        }
+    }
 }
-
 ?>
