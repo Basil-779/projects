@@ -17,6 +17,7 @@ try {
             login varchar(32) NOT NULL,
             firstName varchar(32) NOT NULL,
             lastName varchar(32) NOT NULL,
+            isactive tinyint(1) NOT NULL DEFAULT '1',
             age int(2) Not NULL,
             password char(128) NOT NULL,
             gender char(1) DEFAULT NULL,

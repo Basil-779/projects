@@ -4,7 +4,14 @@ use \Models\User;
 use \Models\UserManagePDO;
 use \PDO;
 use Controllers\Validator;
-
+/**
+ * NAMING FAQ
+ * 
+ * 'SOMETHING' HERE - REQUIRES TWIG PAGE
+ * 
+ * auth.login/forget pwd/etc - setName params DO NOT TOUCH
+ *                                            ^^^ O'RLY
+ */
 
 class PagesController extends Controller 
 {
@@ -157,6 +164,143 @@ class PagesController extends Controller
             return $this->redirect($response, 'auth.login', 302); /**AUTH.LOGIN - NAMED BY TWIG BEFORE */
         }
 
+        return $this->redirect($response, 'home', 200);
+    }
+
+    public function getForgotPwd($request, $response)
+    {
+        $user ='';
+
+        if (!Validator::isConnected())
+        {
+            $userManagerPDO = new UserManagerPDO($this->db);
+            return $this->render($response, 'FORGOT PASSWD PAGE HERE');
+        }
+        else 
+        {
+            return $this->redirect($response, 'home', 200);
+        }
+    }
+
+    public function postForgotPwd($request, $response)
+    {
+        if (!Validator::isConnected())
+        {
+            $errors = [];
+            $email = $request->getParam('email');
+
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL))
+            {
+                $errors['email'] = 'Email is invalid';
+            }
+            else 
+            {
+                $UserManagerPDO = new UserManagerPDO($this->db);
+                $user = $UserManagerPDO->getUserFromEmail($email);
+
+                if (!empty($user))
+                {
+                    $user->setHash(md5(uniqid(rand(), true)));
+                    $UserManagerPDO->save($user);
+                    confirmResetPwd($email, $user->hash());
+                }
+            }
+        }
+
+        if (!empty($errors))
+        {
+            $this->flash('Something not filled correctly', 'error');
+            return $this->redirect($response, 'forgotpwd', 302);
+        }
+        else 
+        {
+            $this->flash('Mail to reset passwd has been sent', 'info');
+            return $this->redirect($response, 'auth.login', 200);
+        }
+    }
+
+    public function getNewPwd($request, $response)
+    {
+        $user = '';
+
+        if (!Validator::isConnected() && $_GET['email'] && !empty($_GET['email']) && isset($_GET['hash']) && !empty($_GET['hash']))
+        {
+            $UserManagerPDO = new UserManagerPDO($this->db);
+
+            $email = $_GET['email'];
+            $_SESSION['email'] = $email;
+            $hash = $_GET['hash'];
+            $_SESSION['hash'] = $hash;
+            $user = $userManagerPDO->getUserFromEmail($email);
+
+            if ($user && $user->hash() === $_GET['hash'])
+            {
+                return $this->render($response, 'NEWPASS PAGE HERE');
+            }
+            else
+            {
+                $this->flash('Invalid link', 'error');
+                return $this->redirect($response, 'auth.login', 302);
+            }
+        }
+        else
+        {
+            return $this->redirect($response, 'home', 200);
+        }
+    }
+
+    public function postNewPwd($request, $response)
+    {
+        if (!Validator::isConnected())
+        {
+            $UserManagerPDO = new UserManagerPDO($this->db);
+            $email = $_SESSION['email'];
+            $hash = $_SESSION['hash'];
+            $user = $UserManagerPDO->getUserFromEmail($email);
+            $newPassword = $request->getParam('newPassword');
+            $newPasswordConfirm = $request->getParam('newPasswordConfirm');
+            $errors = [];
+
+            if ($newPassword != $newPasswordConfirm)
+            {
+                $errors['newPasswordConfirm'] = 'Passwords do not match';
+            }
+
+            switch (Validator::passwordCheck($newPassword))
+            {
+                case 1:
+                    $errors['newPassword'] = 'Password too short';
+                break;
+                case 2:
+                    $errors['newPassword'] = 'Must be at least 1 number';
+                break;
+                case 3:
+                    $errors['newPassword'] = 'Must be at least 1 letter';
+                break;
+            }
+
+            if (!empty($errors))
+            {
+                $this->flash('something isnt filled correctly', 'error');
+                $this->flash($errors, 'errors');
+                return $response->withRedirect('newpwd' . '?' . 'email=' . $email . '&hash=' . $hash);
+            }
+
+            else
+            {
+                $user->setPassword(password_hash($newPassword, PASSWORD_DEFAULT));
+                $userManagerPDO->save($user);
+
+                $this->flash('Your password has been changed', 'success');
+                return $this->redirect($response, 'auth.login', 200);
+            }
+        }
+    }
+    public function getLogOut($request, $response)
+    {
+        unset($_SESSION['id']);
+        setcookie("matcha_cookie", null, -1, "/");
+        session_destroy();
         return $this->redirect($response, 'home', 200);
     }
 
