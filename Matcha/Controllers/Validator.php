@@ -167,7 +167,7 @@ class Validator
 
     public static function ageCheck($age)
     {
-        if ($age < 18)
+        if (intval($age) < 18)
         {
             return FALSE;
         }
