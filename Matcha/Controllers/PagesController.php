@@ -15,6 +15,148 @@ use Controllers\Validator;
 
 class PagesController extends Controller 
 {
+    const LOGIN_DOESNT_EXISTS = 0;
+
+    public function home($request, $response)
+    {
+        $user = NULL;
+        $data = '';
+        $notifs = '';
+        $nbUnread = '';
+        $minPopularity = '';
+        $minCommonTags = '';
+        $sortby = '';
+        $ageMin = '';
+        $ageMax = '';
+        $distance = '';
+
+        if (Validator::isConnected())
+        {
+            $userManagerPDO = new UserManagerPDO($this->db);
+            $user = $UserManagerPDO->getUnique(unserialize($_SESSION['id']));
+
+            if (empty($user))
+            {
+                session_destroy();
+            }
+
+            if ($user->mainpicture())
+            {
+                if(!(isset($_GET['distance'])) || empty($_GET['distance']) || $_GET['distance'] < 0)
+                {
+                    $distance = 10000;
+                }
+                else 
+                {
+                    $distance = $_GET['distance'];
+                }
+
+                if(!(isset($_GET['ageMax'])) || empty($_GET['ageMax']) || $_GET['ageMax'] < 0)
+                {
+                    $ageMax = 100000;
+                }
+                else
+                {
+                    $ageMax = $_GET['ageMax'];
+                }
+
+                if (isset($_GET['min']) && $_GET['minPopularity'] >= 0)
+                {
+                    $minPopularity = $_GET['minPopularity'];
+                }
+
+                if (isset($_GET['minCommonTags']) && $_GET['minCommonTags'] >= 0)
+                {
+                    $minCommonTags = $_GET['minCommonTags'];
+                }
+
+                $data = $UserManagerPDO->getMatches($user, $distance);
+
+                $i = 0;
+
+                foreach ($data as $key => $value)
+                {
+                    $user_to_compare = $UserManagerPDO->getUnique($value['to_user_id']);
+                    $data[$key]['to_user_age'] = Validator::getAge($data[$key]['to_user_age']);
+                    if (($data[$key]['to_user_age'] >= $ageMin && $data[$key]['to_user_age'] <= $ageMax) && $data[$key]['popularity'] >= $minPopularity)
+                    {
+                        $tagsInCommon = $UserManagerPDO->countSimilarTags($user, $user_to_compare);
+                        $data[$key]['tagsInCommon'] = $tagsInCommon;
+                        $data[$key]['tags'] = $user_to_compare->tags();
+                        if ($tagsInCommon < $minCommonTags)
+                        {
+                            unset($data[$key]);
+                        }
+                        $i++;
+                    }
+
+                    else
+                    {
+                        unset($data[$key]);
+                    }
+                }
+
+                if (!empty($_GET['sortBy']) && isset($_GET['sortBy']))
+                {
+                    switch ($_GET['sortBy'])
+                    {
+                        case 'age':
+                            $data = array_orderby($data, 'to_user_age', SORT_ASC, 'distance_in_km', SORT_ASC);
+                        break;
+                        case 'popularity':
+                            $data = array_orderby($data, 'popularity', SORT_DESC, 'distance_in_km', SORT_ASC);
+                        break;
+                        case 'tagsInCommon':
+                            $data = array_orderby($data, 'tagsInCommon', SORT_DESC, 'distance_in_km', SORT_ASC);
+                        default:
+                            break;
+                    }
+                }
+
+                $notificationManager = new NotificationManager($this->db);
+                $notifs = $notificationManager->get($user);
+                $i = 0;
+                foreach ($notifs as $notif)
+                {
+                    if ($notif->unread() == 1)
+                    {
+                        $i++;
+                    }
+                }
+                $nbUnread = $i;
+            }
+
+            else 
+            {
+                $this->flash('You do not have a profile picture! Please, set one before getting your matches!', 'warning');
+            }
+
+            if ($user->isComplete())
+            {
+                $this->render($response, 'home.twig', [
+                    'user' => $user,
+                    'data' => $data,
+                    'sortBy' => $sortBy,
+                    'ageMin' => $ageMin,
+                    'ageMax' => $ageMax,
+                    'distance' => $distance,
+                    'minPopularity' => $minPopularity,
+                    'minCommonTags' => $minCommonTags,
+                    'notifs' => $notifs,
+                    'nbUnread' => $nbUnread
+                    ]);
+            }
+            else 
+            {
+                return $this->redirect($response, 'auth.signupinfos', 200);
+            }
+        }
+        else
+        {
+            return $this->redirect($response, 'auth.login', 200);
+        }
+    }
+
     public function getSignUp($request, $response)
     {
         if (!Validator::isConnected())
