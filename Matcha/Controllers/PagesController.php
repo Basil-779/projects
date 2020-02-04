@@ -250,6 +250,94 @@ class PagesController extends Controller
         return $this->redirect($response, 'LOGIN PAGE HERE', 200);
     }
 
+    public function getSignUpInfos($request, $response)
+    {
+        if (Validator::isConnected())
+        {
+            $id = unserialize($_SESSION['id']);
+            $UserManagerPDO = new UserManagerPDO($this->db);
+            $user = $UserManagerPDO->getUnique($id);
+            if (!($user->isComplete()))
+            {
+                return $this->render($response, 'SIGN UP INFO PAGE HERE', ['user' => $user]);
+            }
+            else
+            {
+                $this->flash('You can not access this page.', 'error');
+                return $response->withRedirect($this->router->pathFor('user.profile', ['userprofile' => $user->login()]));
+            }
+        }
+
+        else
+        {
+            $this->flash('You must be logged to access this page', 'error');
+            return $this->redirect($response, 'auth.signup', 302);
+        }
+    }
+
+    public function postSignUpInfos($request, $response)
+    {
+        $errors = [];
+
+        if (!Validator::bioLengthCheck($request->getParam('bio')))
+        {
+            $errors['bio'] = 'Your bio must contain at least 20 chars.';
+        }
+
+        if (!Validator::radioCheck($request->getParam('gender')))
+        {
+            $errors['gender'] = 'You must pick a gender';
+        }
+
+        if (!Validator::tagsCheck($request->getParam('tags')))
+        {
+            $errors['tags'] = 'You must select at least 1 tag';
+        }
+
+        if (empty($errors))
+        {
+            $id = unserialize($_SESSION['id']);
+            $tags = $request->getParam('tags');
+            $UserManagerPDO = new UserManagerPDO($this->db);
+            $user = $UserManagerPDO->getUnique((int) $id);
+
+            $user->setBio($request->getParam('bio'));
+
+            if (!Validator::radioCheck($request->getParam('sexuality')))
+            {
+                $user->setSexuality('bisexual');
+            }
+            else
+            {
+                $user->setSexuality($request->getParam('sexuality'));
+            }
+
+            $user->setGender($request->getParam('gender'));
+            $user->setTags($tags);
+
+            if ($request->getParam('latitude') && $requset->getParam('longitude'))
+            {
+                $latitude = floatval($request->getParam('latitude'));
+                $longitude = floatval($request->getParam('longitude'));
+
+                $user->setCoordinates($latitude, $longitude);
+                $user->setMap($request->getParam('map'));
+            }
+
+            $UserManagerPDO->save($user);
+            $UserManagerPDO->addExtras($user, $tags);
+        }
+
+        else 
+        {
+            $this->flash('Something was not filled correctly', 'error');
+            $this->flash($errors, 'errors');
+            return $this->redirect($response, 'auth.signupinfos', 302);
+        }
+
+        return $this->redirect($response, 'home', 200);
+    }
+
     public function getLogIn($request, $response)
     {
         $user = '';
