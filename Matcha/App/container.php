@@ -8,7 +8,7 @@ $container['debug'] = function()
 
 $container['db'] = function($container)
 {
-    $db = \Models\DBFactory::getMysqlConnectionWWithPDO();
+    $db = \Models\DBFactory::getMysqlConnectionWithPDO();
     return $db;
 };
 
@@ -23,7 +23,7 @@ $container['view'] = function($container)
     }
 
     $basePath = rtrim(str_ireplace('index.php', '', $container['request']->getUri()->getBasePath()), '/');
-    $view->addExtension(new Slim\Views\TwwigExtension($container['router'], $basePath));
+    $view->addExtension(new Slim\Views\TwigExtension($container['router'], $basePath));
 
     return $view;
 }
