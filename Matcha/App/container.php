@@ -8,14 +8,14 @@ $container['debug'] = function()
 
 $container['db'] = function($container)
 {
-    $db = \Models\DBFactory::getMysqlConnectionWithPDO();
+    $db = \App\Models\DBFactory::getMysqlConnectionWithPDO();
     return $db;
 };
 
 $container['view'] = function($container)
 {
     $dir = dirname(__DIR__);
-    $view = new \Slim\Views\Twig($dir . '/views', ['cache' => false, 'debug' => $container->debug]);
+    $view = new \Slim\Views\Twig($dir . '/app/views', ['cache' => false, 'debug' => $container->debug]);
 
     if ($container->debug)
     {

@@ -1,5 +1,5 @@
 <?php
-namespace Models;
+namespace App\Models;
 
 class User
 {
@@ -226,5 +226,3 @@ class User
         return $this->map;
     }
 }
-
-?>

@@ -1,11 +1,11 @@
 <?php
-namespace Middlewares;
+namespace App\Middlewares;
 
 class OldMiddleware
 {
     private $twig;
 
-    public function __construct(\Twig_Enviroment $twig)
+    public function __construct(\Twig_Environment $twig)
     {
         $this->twig = $twig;
     }

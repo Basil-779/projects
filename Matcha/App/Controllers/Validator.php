@@ -1,5 +1,5 @@
 <?php
-namespace Controllers;
+namespace App\Controllers;
 use \PDO;
 
 
@@ -178,6 +178,3 @@ class Validator
     }
 
 }
-
-
-?>

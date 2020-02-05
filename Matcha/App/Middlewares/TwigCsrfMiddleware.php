@@ -1,12 +1,12 @@
 <?php
-namespace Middlewares;
+namespace App\Middlewares;
 use Slim\Csrf\Guard;
 
 class TwigCsrfMiddleware
 {
     private $twig;
 
-    public function __construct(\Twig_Enviroment $twig, Guard $csrf)
+    public function __construct(\Twig_Environment $twig, Guard $csrf)
     {
         $this->twig = $twig;
         $this->csrf = $csrf;

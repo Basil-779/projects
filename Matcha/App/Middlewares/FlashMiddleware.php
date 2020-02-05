@@ -4,13 +4,13 @@ USE IN INDEX
 use \Middleware\FlashMiddleware 
 */
 
-namespace Middlewares;
+namespace App\Middlewares;
 
 class FlashMiddleware
 {
     private $twig;
 
-    public function __construct(\Twig_Enviroment $twig)
+    public function __construct(\Twig_Environment $twig)
     {
         $this->twig = $twig;
     }

@@ -1,9 +1,9 @@
 <?php
-namespace Controllers;
-use \Models\User;
-use \Models\UserManagePDO;
+namespace App\Controllers;
+use App\Models\User;
+use App\Models\UserManagerPDO;
 use \PDO;
-use Controllers\Validator;
+use App\Controllers\Validator;
 /**
  * NAMING FAQ
  * 
@@ -305,5 +305,3 @@ class PagesController extends Controller
     }
 
 }
-
-?>

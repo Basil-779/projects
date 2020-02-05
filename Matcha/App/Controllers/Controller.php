@@ -1,7 +1,8 @@
 <?php
-namespace \Controllers;
-use \Models\UserManagerPDO;
-use \Models\User;
+namespace App\Controllers;
+use App\Models\UserManagerPDO;
+use App\Models\User;
+use App\Controllers\Validator;
 use \PDO;
 
 class Controller
@@ -25,5 +26,3 @@ class Controller
 		return $this->container->get($name);
 	}
 }
-
-?>

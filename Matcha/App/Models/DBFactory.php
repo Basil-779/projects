@@ -1,5 +1,5 @@
 <?php 
-namespace Models;
+namespace App\Models;
 use \PDO;
 
 class DBFactory
@@ -24,4 +24,3 @@ class DBFactory
         return new MySQLi('localhost', 'root', 'root', 'matcha');
     }
 }
-?>
