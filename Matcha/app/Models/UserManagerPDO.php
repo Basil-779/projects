@@ -319,6 +319,18 @@ class UserManagerPDO extends UserManager
         $DB_REQ->execute();
     }
 
+    public function setNewPassword($hash, $newpass)
+    {
+        $DB_REQ = $this->DB_REQ->prepare('
+        UPDATE users
+        SET password = :newpassword
+        WHERE hash = :hash
+        ');
+        $DB_REQ->bindValue(':hash', $hash);
+        $DB_REQ->bindValue(':newpassword', $newpass);
+        $DB_REQ->execute();
+    }
+
     protected function update(User $user)
     {
         $DB_REQ = $this->DB_REQ->prepare('

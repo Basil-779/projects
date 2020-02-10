@@ -23,6 +23,28 @@ class PagesController extends Controller
         $UserManagerPDO = new UserManagerPDO($this->db);
 		return $UserManagerPDO->activateUser($args['hash']);
     }
+    
+    public function changePassword($request, $response, $args)
+    {
+        $UserManagerPDO = new UserManagerPDO($this->db);
+        if (Validator::passwordCheck($request->getParam('newPassword')))
+        {
+            switch (Validator::passwordCheck($request->getParam('newPassword')))
+            {
+                case 1:
+                    $errors['password'] = 'Password too short';
+                    break;
+                case 2:
+                    $errors['password'] = 'Password must contain at least 1 number';
+                    break;
+                case 3:
+                    $errors['password'] = 'Password must contain at least 1 letter';
+                break;
+            }
+        }
+        $newpass = password_hash($request->getParam('newPassword'), PASSWORD_DEFAULT);
+		return $UserManagerPDO->setNewPassword($args['hash'], $newpass);
+    }
 	
 	public function getSignUp($request, $response)
     {
