@@ -1,0 +1,36 @@
+<header class="app-header container-fluid bg-info">
+    <div class="page-header m-auto container">
+        <div class="row h-100">
+            <div class="col-9"></div>
+            {% if login %}
+                <div class="col-3">
+                    <div class="dropdown h-100">
+                        <button class="btn btn-info dropdown-toggle h-100" type="button"
+                                id="dropdownMenuButton"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-user"></i><span> {{ login }}</span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="#">Profile</a>
+                            <a class="dropdown-item" href="#">Settings</a>
+                            <a class="dropdown-item" onclick="logout_ajax()">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+<script>
+    function logout_ajax(){
+        window.location.replace("/logout");
+    }
+</script>
+
+<style>
+    .page-header {
+        max-width: 1280px;
+        height: 50px;
+    }
+</style>
