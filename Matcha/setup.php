@@ -1,3 +1,4 @@
+#!/usr/bin/php
 <?php
 try {
     $DB_PDO = new PDO('mysql:host=localhost;charset=utf8', 'root', 'root');
@@ -26,7 +27,8 @@ try {
             bio text,
             sexuality char(12) DEFAULT 'bisexual',
             rating int NOT NULL DEFAULT '0',
-            map tinyint(1) NOT NULL DEFAULT '0' COMMENT 'If GEO is allowed')
+            longitude decimal(9,6) DEFAULT NULL,
+            latitude decimal(9, 6) DEFAULT NULL)
         ");
     $DB_REQ->execute();
     $DB_REQ = $DB_PDO->prepare("ALTER TABLE users AUTO_INCREMENT=30;");

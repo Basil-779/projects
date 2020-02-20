@@ -130,7 +130,19 @@ function sort_by_gs($gender, $sexuality, $id)
         $DB_REQ->execute();
         $ids2 = $DB_REQ->fetchAll(PDO::FETCH_ASSOC);
 
-        $ids = array_merge($ids1, $ids2);
+        $sexuality = 'heterosexual';
+        $DB_REQ = new PDO('mysql:host=localhost;dbname=matcha', 'root', 'root');
+        $DB_REQ = $DB_REQ->prepare('
+        SELECT id FROM users
+        WHERE sexuality = :sexuality AND gender = :genderS AND id <> :id
+        ');
+        $DB_REQ->bindValue(':sexuality', $sexuality, PDO::PARAM_STR);
+        $DB_REQ->bindValue(':genderS', $genderS, PDO::PARAM_STR);
+        $DB_REQ->bindValue(':id', $id, PDO::PARAM_INT);
+        $DB_REQ->execute();
+        $ids3 = $DB_REQ->fetchAll(PDO::FETCH_ASSOC);
+
+        $ids = array_merge($ids1, $ids2, $ids3);
     }
         foreach ($ids as $num => $elem)
         {
