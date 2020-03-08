@@ -332,9 +332,15 @@ class PagesController extends Controller
 			{
 				if (Validator::isUser($args['chat_id'], $this->container->db))
 				{
-					$UserManagerPDO = new UserManagerPDO($this->db);
-					$messages = $UserManagerPDO->getChatMsg($_SESSION['id'], $args['chat_id']);
-					$this->render($response, '/chat.twig', ['messages' => json_encode($messages), 'login' => $_SESSION['login'], 'count' => $this->countNotif($id)]);
+					if (hasLiked((int)$_SESSION['id'], (int)$args['chat_id']) && hasLiked((int)$args['chat_id'], (int)$_SESSION['id']))
+					{
+						$UserManagerPDO = new UserManagerPDO($this->db);
+						$messages = $UserManagerPDO->getChatMsg($_SESSION['id'], $args['chat_id']);
+						$this->render($response, '/chat.twig', ['messages' => json_encode($messages), 'login' => $_SESSION['login'], 'count' => $this->countNotif($id)]);
+					}
+					else {
+						$errors['unliked'] = "Sorry, this user unliked you.";
+					}
 				}
 				else {
 					$errors['dialogue'] = "No such user.";
