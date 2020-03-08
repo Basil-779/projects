@@ -1,0 +1,49 @@
+footer {
+    position: -webkit-sticky;
+    position: sticky;
+}
+
+#page-container {
+    min-height: 90vh;
+    position: relative;
+}
+
+.notifications_wrapper {
+    position: absolute;
+    bottom: 0;
+}
+
+#notification_counter {
+    text-align: center;
+}
+
+.counter {
+    background-color: #8db4de;
+    color: #ffffff;
+    padding: 5px;
+    font-size: calc(6px + 0.5em);
+}
+
+.mh-80vh {
+    max-height: 80vh;
+}
+
+.minh-80vh {
+    min-height: 80vh;
+}
+
+.over-y {
+    overflow-y: scroll;
+}
+
+.logo {
+    max-height: 50px;
+}
+
+.no-scroll {
+    overflow: hidden;
+}
+
+.no-resize {
+    resize: none;
+}
