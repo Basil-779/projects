@@ -1,0 +1,72 @@
+{% extends "blog/base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="content-section black-bg">
+      <div class="media">
+        <img class="rounded-circle account-img" src="{{ user.profile.image.url }}">
+        <div class="media-body">
+          <h2 class="account-heading" style="color:#f18437">{{ user.username }}</h2>
+          <p class="text-secondary">{{ user.email }}</p>
+        </div>
+          <a class="btn btn-outline-info" href="/profile/password">Change password</a>
+      </div>
+      <form method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          <fieldset class="form-group">
+              <legend class="border-bottom mb-4">{% trans "Profile Info" %}</legend>
+              {{ u_form|crispy }}
+              {{ p_form|crispy }}
+          </fieldset>
+          <div class="form-group text-center">
+              <button class="btn btn-outline-info" type="submit">{% trans "Update" %}</button>
+          </div>
+      </form>
+    </div>
+    <div>
+      
+  {% if soc_info.github_login %}
+ 
+  <h3>{% trans "Connected via" %} <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/GitHub_logo_2013.svg/600px-GitHub_logo_2013.svg.png" alt="Github" style="width:100px;"></p>
+    {% if soc_info.can_disconnect %}
+      <form method="post" action="{% url 'social:disconnect' 'github' %}">
+        {% csrf_token %}
+        <button type="submit">{% trans "Disconnect from" %} GitHub</button>
+      </form>
+    {% else %}
+      <button type="button" disabled>{% trans "Disconnect from" %} GitHub</button>
+      <p style="color: red">{% trans "You must" %} <a href="{% url 'password' %}">{% trans "define a password" %}</a> {% trans "for your account before disconnecting from" %} Github.</p>
+    {% endif %}
+
+  {% endif %}
+
+  
+  {% if soc_info.intra42_login %}
+    <h3>{% trans "Connected via" %} <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/42_Logo.svg/200px-42_Logo.svg.png" alt="42intra" style="width:100px;"></h3>
+    {% if soc_info.can_disconnect %}
+      <form method="post" action="{% url 'social:disconnect' 'intra42' %}">
+        {% csrf_token %}
+        <button type="submit">{% trans "Disconnect from" %} intra42</button>
+      </form>
+    {% else %}
+      <button type="button" disabled>{% trans "Disconnect from" %} intra42</button>
+      <p style="color: red">{% trans "You must" %} <a href="{% url 'password' %}">{% trans "define a password" %}</a> {% trans "for your account before disconnecting from" %} intra42.</p>
+    {% endif %}
+  {% endif %}
+
+  
+  {% if soc_info.yandex_login %}
+  <h3>{% trans "Connected via" %} <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Yandex_Logo.svg/320px-Yandex_Logo.svg.png" alt="Yandex" style="width:100px;"></h3>
+    {% if soc_info.can_disconnect %}
+      <form method="post" action="{% url 'social:disconnect' 'yandex-oauth2' %}">
+        {% csrf_token %}
+        <button type="submit">{% trans "Disconnect from" %} Yandex</button>
+      </form>
+    {% else %}
+      <button type="button" disabled>{% trans "Disconnect from" %} Yandex</button>
+      <p style="color: red">{% trans "You must" %} <a href="{% url 'password' %}">{% trans "define a password" %}</a> {% trans "for your account before disconnecting from" %} Yandex.</p>
+    {% endif %}
+
+  {% endif %}
+    </div>
+{% endblock content %}

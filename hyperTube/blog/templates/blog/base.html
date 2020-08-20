@@ -1,0 +1,192 @@
+{% load i18n %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="apple-touch-icon" sizes="57x57" href="/static/blog/icons/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/static/blog/icons/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/static/blog/icons/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/static/blog/icons/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/static/blog/icons/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/static/blog/icons/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/static/blog/icons/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/static/blog/icons/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/blog/icons/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/static/blog/icons/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/blog/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/static/blog/icons/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/blog/icons/favicon-16x16.png">
+    <link rel="manifest" href="/static/blog/icons/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/static/blog/icons/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Audiowide&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Neucha&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Comfortaa:700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P:400&display=swap" rel="stylesheet">
+    <link href="/static/blog/main.css" rel="stylesheet" type="text/css">
+    <link href="/static/blog/bootstrap-slider.min.css" rel="stylesheet" type="text/css">
+    <script src="/static/blog/bootstrap-slider.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <!-- <script src="/static/scripts.js" charset="utf-8"></script> -->
+    <title>Hypertube{% if title %} - {{ title }}  {% endif %}</title>
+    <style>
+        html, body, h2, h1 {font-family: 'Neucha', cursive;}
+        .regtext {font-family: 'Roboto', sans-serif;}
+        .blink {
+            animation: blinker 2s linear infinite;
+        }
+        @keyframes blinker {
+            50% {
+                opacity: 0;
+                }
+        }
+        /*.anigrad { background: linear-gradient(270deg, #fff4ff, #fffff4, #f4ffff);
+            background-size: 600% 600%;
+            animation: bgani 30s ease infinite; }*/
+
+        @keyframes bgani {
+            0%{background-position:0% 50%}
+            50%{background-position:100% 50%}
+            100%{background-position:0% 50%}
+        }
+        .form-control, .custom-control-input, .custom-file-input {
+            background-color: rgba(255, 255, 255, 20%) !important;
+        }
+        .message {
+            background-color: rgba(255, 220, 255, 15%) !important;
+            border: 1px solid rgb(164, 164, 164);
+            border-radius: 5px;
+            margin-bottom: 10px;
+            max-width: 75%
+        }
+        .message-self {
+            background-color: rgba(220, 255, 255, 15%) !important;
+            border: 1px solid rgb(164, 164, 164);
+            border-radius: 5px;
+            margin-bottom: 10px;
+            max-width: 75%
+        }
+    </style>
+</head>
+<body class="container anigrad">
+    <div class="fixed-top">
+        <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+        <div class="container">
+            <a class="navbar-brand lead" href="{% url 'blog-home' %}" style="font-family: 'Audiowide', 'Press Start 2P';
+                
+                background: linear-gradient(to right,rgb(255, 0, 149), rgb(255, 153, 0));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;">{% trans "HyperTUBE" %}</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="collapsibleNavbar">
+                <ul class="navbar-nav align-items-center">
+
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'profile' %}">{% trans "Hi" %}, {{ user.username }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">{% trans "Log Out" %}</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'register' %}">{% trans "Register" %}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">{% trans "Log In" %}</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'blog-about' %}">{% trans "About" %}</a>
+                    </li>
+                    <li class="nav-item">
+                        <form action="{% url 'set_language' %}" method="post">{% csrf_token %}
+                            <input name="next" type="hidden" value="{{ redirect_to }}">
+                            <select class="selectpicker" style="background-color: #666666;
+                            color: #bbbbbb;
+                            border: 0 none;
+                            border-radius: 10px;
+                            padding: -6px 20px;" name="language" onchange="this.form.submit()">
+                                {% get_current_language as LANGUAGE_CODE %}
+                                {% get_available_languages as LANGUAGES %}
+                                {% get_language_info_list for LANGUAGES as languages %}
+                                {% for language in languages %}
+                                    <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected{% endif %} data-icon="https://upload.wikimedia.org/wikipedia/en/thumb/f/f3/Flag_of_Russia.svg/320px-Flag_of_Russia.svg.png">
+                                        {{ language.code }}
+                                    
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </form>
+
+
+                    </li>
+                </ul>
+            </div>
+        </div>
+        </nav>
+        <div class="mt-0 pt-0 anigrad">
+            <h1 class="text-center">{% block header %}{% endblock %}</h1>
+        </div>
+
+    </div>
+    <section class="col-sm-12 mx-auto" style="margin-top:110px; margin-bottom:140px">
+
+        {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+        <div class="">
+            {% block content %}{% endblock %}
+        </div>
+
+
+    </section>
+
+
+    <nav class="navbar navbar-expand bg-dark navbar-dark justify-content-center fixed-bottom ">
+        <h5 class="text-white">&copy; hwispmot, mbennis, pkerstin</h5>
+        <!--<ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'movie-list' 'rating' %}">
+                    <i class="fas fa-chart-bar"></i> {% trans "Rating" %}</a>
+            </li>
+            <li class="nav-item">
+                <a id="viewnew" class="nav-link" href="{% url 'movie-list' 'title' %}">
+                    <i class="fas fa-sort-alpha-down"></i> {% trans "Title" %}</a>
+            </li>
+            <li class="nav-item">
+                <a id="likenew" class="nav-link" href="{% url 'movie-list' 'seeds' %}">
+                    <i class="fas fa-seedling"></i> {% trans "Seeds" %}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'movie-list' 'year' %}">
+                <i class="far fa-clock"></i> {% trans "Year" %}</a>
+            </li>
+            <li class="nav-item">
+                <a id="mesnew" class="nav-link" href="{% url 'movie-list' 'download_count' %}">
+                    <i class="fas fa-download"></i> {% trans "Downloads" %}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'movie-list' 'date_added' %}">
+                    <i class="fas fa-user-clock"></i> {% trans "Added" %}</a>
+            </li>
+
+        </ul>-->
+    </nav>
+</body>
+</html>

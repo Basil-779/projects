@@ -1,0 +1,154 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-08-05 14:07+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: blog/templates/blog/base (2).html:69 blog/templates/blog/base.html:87
+msgid "HyperTUBE"
+msgstr ""
+
+#: blog/templates/blog/base (2).html:78 blog/templates/blog/base.html:96
+msgid "Hi"
+msgstr ""
+
+#: blog/templates/blog/base (2).html:81 blog/templates/blog/base.html:99
+msgid "Log Out"
+msgstr ""
+
+#: blog/templates/blog/base (2).html:85 blog/templates/blog/base.html:103
+msgid "Register"
+msgstr ""
+
+#: blog/templates/blog/base (2).html:88 blog/templates/blog/base.html:106
+msgid "Log In"
+msgstr ""
+
+#: blog/templates/blog/base (2).html:92 blog/templates/blog/base.html:110
+msgid "About"
+msgstr ""
+
+#: blog/templates/blog/base (2).html:146 blog/templates/blog/base.html:164
+#: blog/templates/blog/home.html:54
+msgid "Rating"
+msgstr ""
+
+#: blog/templates/blog/base (2).html:150 blog/templates/blog/base.html:168
+#: blog/templates/blog/home.html:73
+msgid "Title"
+msgstr ""
+
+#: blog/templates/blog/base (2).html:154 blog/templates/blog/base.html:172
+msgid "Seeds"
+msgstr ""
+
+#: blog/templates/blog/base (2).html:158 blog/templates/blog/base.html:176
+#: blog/templates/blog/home.html:35
+msgid "Year"
+msgstr ""
+
+#: blog/templates/blog/base (2).html:162 blog/templates/blog/base.html:180
+msgid "Downloads"
+msgstr ""
+
+#: blog/templates/blog/base (2).html:166 blog/templates/blog/base.html:184
+msgid "Added"
+msgstr ""
+
+#: blog/templates/blog/home.html:7
+msgid "Search films..."
+msgstr ""
+
+#: blog/templates/blog/home.html:11
+msgid ""
+"No results were found for your request. Maybe these popular movies will "
+"interest you:"
+msgstr ""
+
+#: blog/templates/blog/home.html:17
+msgid "Sort movies by:"
+msgstr ""
+
+#: blog/templates/blog/home.html:79
+msgid "Filter movies:"
+msgstr ""
+
+#: blog/templates/blog/home.html:88
+msgid "Apply filters"
+msgstr ""
+
+#: blog/templates/blog/home.html:94 blog/templates/blog/home.html:124
+msgid "Page"
+msgstr ""
+
+#: blog/templates/blog/home.html:94
+msgid "of"
+msgstr ""
+
+#: blog/templates/blog/movie_detail.html:17
+msgid "Year:"
+msgstr ""
+
+#: blog/templates/blog/movie_detail.html:20
+msgid "IMDB rating:"
+msgstr ""
+
+#: blog/templates/blog/movie_detail.html:23
+msgid "MPA rating:"
+msgstr ""
+
+#: blog/templates/blog/movie_detail.html:47
+msgid "Movie avaliable at:"
+msgstr ""
+
+#: blog/templates/blog/movie_detail.html:54
+#: blog/templates/blog/movie_detail.html:56
+#: blog/templates/blog/movie_detail.html:65
+#: blog/templates/blog/movie_detail.html:67
+msgid "Watch online"
+msgstr ""
+
+#: blog/templates/blog/movie_detail.html:82
+msgid "There are no enough peers to watch movie."
+msgstr ""
+
+#: blog/templates/blog/movie_detail.html:90
+msgid "Comments"
+msgstr ""
+
+#: blog/templates/blog/movie_detail.html:105
+msgid "No comments yet"
+msgstr ""
+
+#: blog/templates/blog/movie_detail.html:109
+msgid "Type comment here..."
+msgstr ""
+
+#: blog/templates/blog/movie_detail.html:110
+msgid "Leave comment"
+msgstr ""
+
+#: blog/templates/blog/user_posts.html:17
+msgid "Comments by"
+msgstr ""
+
+#: blog/templates/blog/user_posts.html:27
+msgid "Link to movie"
+msgstr ""
+
+#: blog/views.py:239
+msgid "Comment has been added."
+msgstr ""

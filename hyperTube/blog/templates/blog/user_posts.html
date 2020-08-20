@@ -1,0 +1,54 @@
+{% extends "blog/base.html" %}
+{% load i18n %}
+{% block content %}
+    <div class="black-bg content-section">
+        {% with posts|first as post %}
+        <div class="media mb-3">
+            <img src="{{ post.author.profile.image.url }}" class="align-self-start mr-3 rounded-circle" alt="">
+            <div class="media-body mt-2 mr-2">
+                <h4 class="mt-0" style="color:#f18437">{{ view.kwargs.username }} </h4>
+                <p><i class="fas fa-user"></i> {{ post.author.first_name }} {{ post.author.last_name }}</p>
+                <p><i class="fas fa-address-card"></i> {{ post.author.profile.bio }}</p>
+            </div>
+        </div>
+        {% endwith %}
+    </div>
+    <div>
+        <h2 class="mb-3 text-white">{% trans "Comments by" %} {{ view.kwargs.username }} ({{ page_obj.paginator.count }})</h2>
+        {% for post in posts %}
+            <article class="media content-section black-bg">
+              <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
+              <div class="media-body">
+                <div class="article-metadata">
+                  <span class="mr-2">{{ post.author }}</span>
+                  <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>
+                </div>
+                <p class="article-content">{{ post.content }}</p>
+                <a class="mr-2" href="{% url 'movie-detail' post.film_id %}">{% trans "Link to movie" %}</a>
+              </div>
+            </article>
+        {% endfor %}
+        {% if is_paginated %}
+        <div class="text-center">
+          {% if page_obj.has_previous %}
+            <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+            <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+          {% endif %}
+
+          {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+              <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+              <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+            {% endif %}
+          {% endfor %}
+
+          {% if page_obj.has_next %}
+            <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+            <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+          {% endif %}
+        </div>
+    </div>
+
+    {% endif %}
+{% endblock content %}

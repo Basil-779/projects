@@ -1,0 +1,33 @@
+{% extends "blog/base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="content-section black-bg">
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">{% trans "Log In" %}</legend>
+                {{ form|crispy }}
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">{% trans "Login" %}</button>
+            </div>
+        </form>
+        <legend class="border-top mb-4">{% trans "Or sign in via services" %}</legend>
+        <div class="pt-3 d-flex justify-content-around align-items-center bg-white">
+            <a href="{% url 'social:begin' 'github' %}"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/GitHub_logo_2013.svg/600px-GitHub_logo_2013.svg.png" alt="Github" style="width:100px;"></a>
+            <a href="{% url 'social:begin' 'intra42' %}"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/42_Logo.svg/200px-42_Logo.svg.png" alt="42intra" style="width:100px;"></a>
+            <a href="{% url 'social:begin' 'yandex-oauth2' %}"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Yandex_Logo.svg/320px-Yandex_Logo.svg.png" alt="Yandex" style="width:100px;"></a>
+        </div>
+        <div class="border-top pt-3">
+            <small class="text-muted">
+                {% trans "Need An Account?" %} <a class="ml-2" href="{% url 'register' %}">{% trans "Sign Up Now" %}</a>
+            </small>
+            <div class="border-top pt-3">
+                <small class="text-muted">
+                    {% trans "Forgot your password?" %} <a class="ml-2" href="{% url 'forgotpwd' %}">{% trans "Click here" %}</a>
+                </small>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

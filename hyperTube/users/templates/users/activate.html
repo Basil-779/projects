@@ -1,0 +1,7 @@
+{% extends "blog/base.html" %}
+{% load i18n %}
+{% block content %}
+	{% if is_valid %}
+		<a href="/login">Login</a>
+	{% endif %}
+{% endblock content%}

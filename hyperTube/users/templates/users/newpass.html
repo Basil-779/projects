@@ -1,0 +1,19 @@
+{% extends "blog/base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="content-section black-bg">
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="newpass" class="text-left requiredField">
+                Password<span class="asteriskField">*</span> </label>
+            <input type="password" placeholder="Enter new password" name="newpass" class="textinput textInput form-control mb-3" id="newpass">
+            <label for="repeatpass" class="text-left requiredField">
+                Repeat password<span class="asteriskField">*</span> </label>
+            <input type="password" placeholder="Repeat password" name="repeatpass" class="textinput textInput form-control" id="repeatpass">
+            <button type="submit" class="btn btn-outline-info mt-3">Save password</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

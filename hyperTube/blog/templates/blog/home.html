@@ -1,0 +1,173 @@
+{% extends "blog/base.html" %}
+{% block content %}
+{% load i18n %}
+<div class="search_form text-center">
+  <form method="post">
+    {% csrf_token %}
+    <input class="search_field col-md-6 mb-5 text-dark" type="text" name="filmname" placeholder="{% trans 'Search films...' %}"/>
+  </form>
+</div>
+{% if movies and not query_term %}
+  <h5 class="text-white text-center mb-4">{% trans "No results were found for your request. Maybe these popular movies will interest you:" %}</h5>
+{% endif %}
+
+{% if query_term %}
+<div class="content-section black-bg flex-column justify-content-center">
+  <div class="sort_block text-center mb-4">
+    <h5 class="text-white text-bold">{% trans "Sort movies by:" %}</h5>
+    <div class="d-inline ml-3">
+      <form method="post" class="sort_form d-inline">
+        {% csrf_token %}
+        <input type="hidden" name="filmname" value="{{query_term}}" />
+        <input type="hidden" name="page_number" value="{{ page_number }}" />
+        <input type="hidden" name="sort_by" value="year" />
+        <input type="hidden" name="order_by" value={% if order_by == "desc" %} "asc" {% else %} "desc" {% endif %} />
+        <input type="hidden" name="year_range" value="{{ min_year }},{{ max_year }}">
+        <input type="hidden" name="rating_range" value="{{ min_rating }},{{ max_rating }}">
+        <button class="btn btn-outline-info">
+          {% if sort_by == 'year' %}
+            {% if order_by == "desc" %}
+          <i class="fas fa-long-arrow-alt-down"></i>
+            {% else %}
+          <i class="fas fa-long-arrow-alt-up"></i>
+            {% endif %}
+          {% endif %}
+          {% trans "Year" %}
+        </button>
+      </form>
+      <form method="post" class="sort_form d-inline">
+        {% csrf_token %}
+        <input type="hidden" name="filmname" value="{{query_term}}" />
+        <input type="hidden" name="page_number" value="{{ page_number }}" />
+        <input type="hidden" name="sort_by" value="rating" />
+        <input type="hidden" name="order_by" value={% if order_by == "desc" %} "asc" {% else %} "desc" {% endif %} />
+        <input type="hidden" name="year_range" value="{{ min_year }},{{ max_year }}">
+        <input type="hidden" name="rating_range" value="{{ min_rating }},{{ max_rating }}">
+        <button class="btn btn-outline-info">
+          {% if sort_by == 'rating' %}
+            {% if order_by == "desc" %}
+          <i class="fas fa-long-arrow-alt-down"></i>
+            {% else %}
+          <i class="fas fa-long-arrow-alt-up"></i>
+            {% endif %}
+          {% endif %}
+          {% trans "Rating" %}
+        </button>
+      </form>
+      <form method="post" class="sort_form d-inline">
+        {% csrf_token %}
+        <input type="hidden" name="filmname" value="{{query_term}}" />
+        <input type="hidden" name="page_number" value="{{ page_number }}" />
+        <input type="hidden" name="sort_by" value="title" />
+        <input type="hidden" name="order_by" value={% if order_by == "desc" %} "asc" {% else %} "desc" {% endif %} />
+        <input type="hidden" name="year_range" value="{{ min_year }},{{ max_year }}">
+        <input type="hidden" name="rating_range" value="{{ min_rating }},{{ max_rating }}">
+        <button class="btn btn-outline-info">
+          {% if sort_by == 'title' %}
+            {% if order_by == "desc" %}
+          <i class="fas fa-long-arrow-alt-down"></i>
+            {% else %}
+          <i class="fas fa-long-arrow-alt-up"></i>
+            {% endif %}
+          {% endif %}
+          {% trans "Title" %}
+        </button>
+      </form>
+    </div>
+  </div>
+  <div class="filter_block text-center">
+    <h5 class="text-white text-bold">{% trans "Filter movies by:" %}</h5>
+    <form method="post" class="filter_form mt-1">
+      {% csrf_token %}
+      <input type="hidden" name="filmname" value="{{query_term}}" />
+      <input type="hidden" name="page_number" value="1" />
+      <input type="hidden" name="sort_by" value="{{ sort_by }}" />
+      <input type="hidden" name="order_by" value="{{ order_by }}" />
+      <p class="text-white">{% trans "Year" %}</p>
+      <input id="year_slider" name="year_range" type="text"/>
+      <p class="text-white mt-2">{% trans "Rating" %}</p>
+      <input id="rating_slider" name="rating_range" type="text"/></br>
+      <button class="btn btn-outline-info mt-2">{% trans "Apply filters" %}</button>
+    </form>
+  </div>
+</div>
+{% endif %}
+{% if page_list|length > 1 %}
+  <h4 class="text-white">{% trans "Page" %} {{ page_number }} {% trans "of" %} {{ page_list|length }}</h4>
+{% endif %}
+
+<div class="card-deck custom_card justify-content-around">
+  {% for movie in movies %}
+    <div class="card mb-4">
+      <a href="{% url 'movie-detail' movie.id %}"><img class="card-img-top" style="cursor:pointer" src="{{ movie.medium_cover_image }}" alt="Card image" style="width:100%"></a>
+      <div class="card-body">
+        <a href="{% url 'movie-detail' movie.id %}"><h4 class="card-title">{{ movie.title }} ({{ movie.year }})</h4></a>
+        <p class="card-title">IMDB rating: {{ movie.rating }} <i class="fas fa-star" style="color:#e6e640"></i></p>
+        <p class="card-text">{{ movie.synopsis|truncatechars:200 }}</p>
+        {% if movie.is_visited == '1' %}
+          <p class="card-text visited">{% trans "You watched that" %}</p>
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+{% if page_list|length > 1 %}
+<div class="pagination_block d-flex justify-content-center">
+  {% for i in page_list %}
+    <form method="post" class="pagination_form">
+      {% csrf_token %}
+      <input type="hidden" name="filmname" value="{{query_term}}" />
+      <input type="hidden" name="page_number" value="{{ i }}" />
+      <input type="hidden" name="sort_by" value="{{ sort_by }}">
+      <input type="hidden" name="order_by" value="{{ order_by }}">
+      <input type="hidden" name="year_range" value="{{ min_year }},{{ max_year }}">
+      <input type="hidden" name="rating_range" value="{{ min_rating }},{{ max_rating }}">
+      <button class="btn btn-light" {% if page_number == i %} disabled {% endif %}>{% trans "Page" %} {{ i }}</button>
+    </form>
+  {% endfor %}
+</div>
+{% endif %}
+
+    <!-- {% for post in posts %}
+        <article class="media content-section">
+          <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="{% url 'user-posts' post.author.username %}">{{ post.author }}</a>
+              <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>
+            </div>
+            <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
+            <p class="article-content">{{ post.content }}</p>
+          </div>
+        </article>
+    {% endfor %}
+     -->
+    {% if is_paginated %}
+
+      {% if page_obj.has_previous %}
+        <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+      {% endif %}
+
+      {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+          <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+          <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+      {% endif %}
+
+    {% endif %}
+{% if query_term %}
+<script>
+  var sliderA = new Slider("#year_slider", { id: "slider_year", min: 1900, max: 2020, range: true, value: [{{ min_year }}, {{ max_year }}]});
+  var sliderB = new Slider("#rating_slider", { id: "slider_rating", min: 0, max: 10, range: true, value: [{{ min_rating }}, {{ max_rating }}]});
+</script>
+{% endif %}
+{% endblock content %}

@@ -1,0 +1,269 @@
+{% extends "blog/base.html" %}
+{% block content %}
+{% load static %}
+{% load i18n %}
+<div class="media content-section black-bg">
+    <img src="{{ movie.medium_cover_image }}" class="mr-3" alt="{{ movie.title }}">
+    <div class="media-body">
+        <h2 class="mt-0" style="color:#f18437">{{ movie.title }}</h2>
+        <ul class="list-group list-group-flush movie_details">
+            {% if movie.summary %}
+                <li class="list-group-item">{{ movie.summary }}</li>
+            {% elif movie.description_full %}
+                <li class="list-group-item">{{ movie.description_full }}</li>
+            {% endif %}
+            <li class="list-group-item">
+                {% if movie.year %}
+                    <span class="movie_detail badge badge-secondary">{% trans "Year:" %} {{ movie.year }}</span>
+                {% endif %}
+                {% if movie.rating %}
+                    <span class="movie_detail badge badge-secondary">{% trans "IMDB rating:" %} {{ movie.rating }} <i class="fas fa-star"></i></span>
+                {% endif %}
+                {% if movie.mpa_rating %}
+                    <span class="movie_detail badge badge-secondary">{% trans "MPA rating:" %} {{ movie.mpa_rating }}</span>
+                {% endif %}
+            </li>
+            {% if movie.genres %}
+                <li class="list-group-item">
+                    {% for genre in movie.genres %}
+                    <span class="movie_detail badge badge-secondary">{{ genre }}</span>
+                    {% endfor %}
+                </li>
+            {% endif %}
+            {% if movie.yt_trailer_code %}
+                <li class="list-group-item">
+                    <div class="embed_container"><iframe src="https://www.youtube.com/embed/{{ movie.yt_trailer_code }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+
+<div class="content-section black-bg">
+    {% if torrent_720 or torrent_1080 %}
+        <div class="row">
+            <div class="col-lg-6">
+                <div>
+                    <h5 class="text-center text-white">{% trans "Movie avaliable at:" %}</h5>
+                    <ul class="list-group list-group-flush movie_details">
+                        {% if torrent_720 %}
+                            <li class="list-group-item d-flex align-items-center">
+                                <span class="movie_detail badge badge-secondary mr-auto">720p ({{ torrent_720_peers }} peers)</span>
+                                <a href="{{ torrent_720 }}" class="btn btn-primary"><i class="fas fa-magnet"></i> Magnet link</a>
+                                {% if movie_path_720 %}
+                                    <button  type="button" class="btn btn-primary btn-lg mx-2" onclick="watch_movie(720)">{% trans "Watch online" %}</button>
+                                {% elif mpd_720 %}
+                                    <button  type="button" id="button_720" class="btn btn-primary btn-lg mx-2" onclick="quality_request(720)">{% trans "Watch online" %}</button>
+                                {% endif %}
+                            </li>
+                        {% endif %}
+                        {% if torrent_1080 %}
+                        <li class="list-group-item d-flex align-items-center">
+                            <span class="movie_detail badge badge-secondary mr-auto">1080p ({{ torrent_1080_peers }} peers)</span>
+                            <a href="{{ torrent_1080 }}" class="btn btn-primary"><i class="fas fa-magnet"></i> Magnet link</a>
+                            {% if movie_path_1080 %}
+                                <button  type="button" class="btn btn-primary btn-lg mx-2" onclick="watch_movie(1080)">{% trans "Watch online" %}</button>
+                            {% elif mpd_1080 %}
+                                <button  type="button" id="button_1080" class="btn btn-primary btn-lg mx-2" onclick="quality_request(1080)">{% trans "Watch online" %}</button>
+                            {% endif %}
+                        </li>
+                        {% endif %}
+                    </ul>
+                    <h5 class="text-center text-white mt-4" id="status"></h5>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="dash-video-player">
+                    <video class="w-100" controls>
+                    </video>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <p>{% trans "There are no enough peers to watch movie." %}</p>
+    {% endif %}
+</div>
+
+
+
+
+<section class="my-4">
+    <h3 class="text-white">{% trans "Comments" %}</h3>
+    {% if posts %}
+        {% for post in posts %}
+            <article class="media content-section black-bg">
+                <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
+                <div class="media-body">
+                    <div class="article-metadata">
+                        <a href="{% url 'user-posts' post.author %}"><span class="mr-2">{{ post.author }}</span></a>
+                        <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>
+                    </div>
+                    <p class="article-content">{{ post.content }}</p>
+                </div>
+            </article>
+        {% endfor %}
+    {% else %}
+        <p class="text-white">{% trans "No comments yet" %}</p>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <textarea class="w-100 black-bg" name="comment" placeholder="{% trans 'Type comment here...' %}"></textarea>
+        <button class="float-right black-bg">{% trans "Leave comment" %}</button>
+    </form>
+</section>
+
+<script src="{% static 'blog/dash.js/dash.all.js' %}"></script>
+
+<script>
+    function get_cookie_language() {
+        return getCookie('django_language');
+    }
+
+    function set_loading_status(elem) {
+        get_cookie_language() === 'en' ? elem.innerText = "Loading metadata..." : elem.innerText = "Загружаем метаданные...";
+    }
+
+    function set_error_status(elem) {
+        get_cookie_language() === 'en' ? elem.innerText = "Something went wrong." : elem.innerText = "Ошибка загрузки метаданных.";
+    }
+
+    function set_success_status(elem) {
+        get_cookie_language() === 'en' ? elem.innerText = "Now you can play movie." : elem.innerText = "Можно смотреть фильм.";
+    }
+    
+    function quality_request(quality) {
+        let a = document.getElementById("button_" + quality);
+        a.setAttribute('disabled', 'true');
+        let b = document.getElementById("status");
+        set_loading_status(b);
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', window.location.pathname);
+        xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+        xhr.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
+        let body = "quality=" + quality;
+        xhr.send(body);
+        xhr.onload = function() {
+            if (xhr.status !== 200) {
+                set_error_status(b);
+            } else {
+                if (xhr.responseText === 'Error') {
+                    set_error_status(b);
+                }
+                else if (xhr.responseText === 'Success') {
+                    set_success_status(b);
+                    set_quality(quality);
+                }
+                a.removeAttribute('disabled');
+            }
+        };
+    }
+
+    function getCookie(name) {
+        let matches = document.cookie.match(new RegExp(
+            "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+        ));
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+
+    function add_subtitles(player, subtitles_path, lang) {
+        let track = document.createElement('track');
+        track.setAttribute('kind', 'subtitles');
+        track.setAttribute('src', subtitles_path);
+        if (lang === "English") {
+            track.setAttribute('srclang', 'en');
+            track.setAttribute('label', 'English');
+        }
+        else if (lang === "Russian") {
+            track.setAttribute('srclang', 'ru');
+            track.setAttribute('label', 'Russian');
+        }
+        player.appendChild(track);
+    }
+
+    function watch_movie(quality) {
+        let player = document.querySelector(".dash-video-player video");
+        player.innerHTML = '';
+        let source = document.createElement('source');
+        if (quality === 720) {
+            source.setAttribute('src', '{{ movie_path_720 }}');
+            if ('{{ movie_sub_720 }}' !== '' ) {
+                add_subtitles(player, '{{ movie_sub_720 }}', 'English')
+            }
+            if ('{{ movie_sub_720_rus }}' !== '' ) {
+                add_subtitles(player, '{{ movie_sub_720_rus }}', 'Russian')
+            }
+        }
+        else {
+            source.setAttribute('src', '{{ movie_path_1080 }}')
+            if ('{{ movie_sub_1080 }}' !== '' ) {
+                add_subtitles(player, '{{ movie_sub_1080 }}', 'English')
+            }
+            if ('{{ movie_sub_1080_rus }}' !== '' ) {
+                add_subtitles(player, '{{ movie_sub_1080_rus }}', 'Russian')
+            }
+        }
+        source.setAttribute('type', 'video/mp4');
+        player.appendChild(source);
+    }
+
+    function getUrlVars() {
+        var vars = {};
+        var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+            vars[key] = value;
+        });
+        return vars;
+    }
+    
+    function set_quality(quality) {
+        let url;
+        if (quality === 720) {
+            url = "http://localhost:8080/dash/{{ mpd_720 }}"
+        }
+        else {
+            url = "http://localhost:8080/dash/{{ mpd_1080 }}"
+        }
+        startVideo(url);
+    }
+
+    function check_mpd_file(url) {
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', url);
+        xhr.setRequestHeader('Access-Control-Allow-Origin', 'http://localhost:8000');
+        xhr.send();
+        xhr.onload = function() {
+            if (xhr.status !== 200) {
+                //alert(xhr.status);
+            } else {
+                clearInterval(timer);
+                startVideo(url);
+            }
+        };
+    }
+
+    function startVideo(ext_url) {
+        var vars = getUrlVars(),
+            url = ext_url,
+            /*url = "http://localhost:8080/dash/{{ mpd }}",*/
+            video,
+            context,
+            player;
+
+        if (vars && vars.hasOwnProperty("url")) {
+            url = vars.url;
+        }
+
+        video = document.querySelector(".dash-video-player video");
+        context = new Dash.di.DashContext();
+        player = new MediaPlayer(context);
+
+        player.startup();
+
+        player.attachView(video);
+        player.setAutoPlay(false);
+
+        player.attachSource(url);
+
+    }
+</script>
+
+{% endblock content %}

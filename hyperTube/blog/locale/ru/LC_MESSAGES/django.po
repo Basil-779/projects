@@ -1,0 +1,167 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-08-07 16:57+0000\n"
+"PO-Revision-Date: 2020-08-07 19:59+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
+"X-Generator: Poedit 2.3.1\n"
+
+#: blog/templates/blog/about.html:4
+msgid "About Page"
+msgstr "О сайте"
+
+#: blog/templates/blog/base (2).html:69 blog/templates/blog/base.html:88
+msgid "HyperTUBE"
+msgstr "ГиперТРУБА"
+
+#: blog/templates/blog/base (2).html:78 blog/templates/blog/base.html:97
+msgid "Hi"
+msgstr "Привет"
+
+#: blog/templates/blog/base (2).html:81 blog/templates/blog/base.html:100
+msgid "Log Out"
+msgstr "Выйти"
+
+#: blog/templates/blog/base (2).html:85 blog/templates/blog/base.html:104
+msgid "Register"
+msgstr "Регистрация"
+
+#: blog/templates/blog/base (2).html:88 blog/templates/blog/base.html:107
+msgid "Log In"
+msgstr "Войти"
+
+#: blog/templates/blog/base (2).html:92 blog/templates/blog/base.html:111
+msgid "About"
+msgstr "О сайте"
+
+#: blog/templates/blog/base (2).html:146 blog/templates/blog/base.html:166
+#: blog/templates/blog/home.html:54 blog/templates/blog/home.html:88
+msgid "Rating"
+msgstr "Рейтинг"
+
+#: blog/templates/blog/base (2).html:150 blog/templates/blog/base.html:170
+#: blog/templates/blog/home.html:73
+msgid "Title"
+msgstr "Название"
+
+#: blog/templates/blog/base (2).html:154 blog/templates/blog/base.html:174
+msgid "Seeds"
+msgstr ""
+
+#: blog/templates/blog/base (2).html:158 blog/templates/blog/base.html:178
+#: blog/templates/blog/home.html:35 blog/templates/blog/home.html:86
+msgid "Year"
+msgstr "Год"
+
+#: blog/templates/blog/base (2).html:162 blog/templates/blog/base.html:182
+msgid "Downloads"
+msgstr ""
+
+#: blog/templates/blog/base (2).html:166 blog/templates/blog/base.html:186
+msgid "Added"
+msgstr ""
+
+#: blog/templates/blog/home.html:7
+msgid "Search films..."
+msgstr "Искать фильмы..."
+
+#: blog/templates/blog/home.html:11
+msgid ""
+"No results were found for your request. Maybe these popular movies will "
+"interest you:"
+msgstr ""
+"По Вашему запросу ничего не найдено. Может быть эти популярные фильмы Вас "
+"заинтересуют:"
+
+#: blog/templates/blog/home.html:17
+msgid "Sort movies by:"
+msgstr "Сортировка фильмов по:"
+
+#: blog/templates/blog/home.html:79
+msgid "Filter movies by:"
+msgstr "Фильтр фильмов по:"
+
+#: blog/templates/blog/home.html:90
+msgid "Apply filters"
+msgstr "Применить фильтры"
+
+#: blog/templates/blog/home.html:96 blog/templates/blog/home.html:126
+msgid "Page"
+msgstr "Страница"
+
+#: blog/templates/blog/home.html:96
+msgid "of"
+msgstr "из"
+
+#: blog/templates/blog/home.html:108
+msgid "You watched that"
+msgstr "Просмотрено"
+
+#: blog/templates/blog/movie_detail.html:17
+msgid "Year:"
+msgstr "Год:"
+
+#: blog/templates/blog/movie_detail.html:20
+msgid "IMDB rating:"
+msgstr "IMDB рейтинг:"
+
+#: blog/templates/blog/movie_detail.html:23
+msgid "MPA rating:"
+msgstr "Возрастной рейтинг:"
+
+#: blog/templates/blog/movie_detail.html:47
+msgid "Movie avaliable at:"
+msgstr "Фильм доступен в:"
+
+#: blog/templates/blog/movie_detail.html:54
+#: blog/templates/blog/movie_detail.html:56
+#: blog/templates/blog/movie_detail.html:65
+#: blog/templates/blog/movie_detail.html:67
+msgid "Watch online"
+msgstr "Смотреть онлайн"
+
+#: blog/templates/blog/movie_detail.html:83
+msgid "There are no enough peers to watch movie."
+msgstr "Слишком мало пиров для просмотра фильма онлайн."
+
+#: blog/templates/blog/movie_detail.html:91
+msgid "Comments"
+msgstr "Комментарии"
+
+#: blog/templates/blog/movie_detail.html:106
+msgid "No comments yet"
+msgstr "Нет комментариев"
+
+#: blog/templates/blog/movie_detail.html:110
+msgid "Type comment here..."
+msgstr "Комментарий писать здесь..."
+
+#: blog/templates/blog/movie_detail.html:111
+msgid "Leave comment"
+msgstr "Оставить комментарий"
+
+#: blog/templates/blog/user_posts.html:17
+msgid "Comments by"
+msgstr "Комментарии пользователя"
+
+#: blog/templates/blog/user_posts.html:27
+msgid "Link to movie"
+msgstr "Ссылка на фильм"
+
+#: blog/views.py:61
+msgid "Connection error. Try again."
+msgstr "Ошибка соединения. Попробуйте ещё раз."

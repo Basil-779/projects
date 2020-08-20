@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  rtmp: 
+    build: ./nginx
+    ports:
+      - "8080:80"
+  web:
+    build: .
+    # volumes:
+    #   - .:/code
+    ports:
+      - "8000:8000"
+      - "6881:6881"
+    #command: /etc/mod_wsgi-express-80/apachectl restart
+    stdin_open: true
+    #tty: true

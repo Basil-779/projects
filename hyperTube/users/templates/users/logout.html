@@ -1,0 +1,10 @@
+{% extends "blog/base.html" %}
+{% load i18n %}
+{% block content %}
+    <h2 class="text-white text-center">{% trans "You have been logged out" %}</h2>
+    <div class="border-top pt-3">
+        <p class="text-muted text-center">
+            <a href="{% url 'login' %}">{% trans "Log In Again" %}</a>
+        </p>
+    </div>
+{% endblock content %}
