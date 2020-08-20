@@ -1,0 +1,16 @@
+{% extends "/layouts/default.twig" %}
+{% block title %} - Additional settings{% endblock %}
+{% block content %}
+    <div class="container mt-3">
+        <div class="row">
+            <div class="col-sm-3">
+                {{ include('/layouts/nav.twig') }}
+            </div>
+            <div class="col-sm-9 bg-white border rounded shadow-sm">
+                <div id="addSettings"></div>
+            </div>
+        </div>
+    </div>
+    <script> const settings = '{{ settings|escape('js') }}';</script>
+    <script src="/dist/addSettings.js"></script>
+{% endblock %}

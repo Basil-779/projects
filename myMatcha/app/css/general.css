@@ -1,0 +1,93 @@
+h5 {
+    color: blueviolet;
+    text-decoration: underline;
+    letter-spacing: 1px;
+}
+
+footer {
+    position: -webkit-sticky;
+    position: sticky;
+}
+
+#page-container {
+    min-height: 90vh;
+    position: relative;
+}
+
+.notifications_wrapper {
+    position: absolute;
+    bottom: 0;
+}
+
+#notification_counter {
+    text-align: center;
+}
+
+.counter {
+    background-color: #8db4de;
+    color: #ffffff;
+    padding: 5px;
+    font-size: calc(6px + 0.5em);
+}
+
+.mh-80vh {
+    max-height: 80vh;
+}
+
+.minh-80vh {
+    min-height: 80vh;
+}
+
+.over-y {
+    overflow-y: auto;
+}
+
+.logo {
+    max-height: 50px;
+}
+
+.no-scroll {
+    overflow: hidden;
+}
+
+.no-resize {
+    resize: none;
+}
+
+.online:before {
+    background-image: url('/images/online.png');
+    background-size: 10px 10px;
+    background-repeat: no-repeat;
+    margin-right: 5px;
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    content: "";
+}
+
+.font-08 {
+    font-size: 0.8rem;
+}
+
+.custom-p {
+    font-family: serif;
+    color: blueviolet;
+    font-weight: 600;
+}
+
+.nav-link {
+    font-family: serif;
+    font-weight: bold;
+}
+
+a {
+    font-family: serif;
+}
+
+.dropdown-item {
+    cursor: pointer;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(23, 162, 184, 0.1)
+}

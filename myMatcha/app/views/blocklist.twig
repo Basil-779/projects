@@ -1,0 +1,16 @@
+{% extends "/layouts/default.twig" %}
+{% block title %} - Blocklist{% endblock %}
+{% block content %}
+    <div class="container mt-3">
+        <div class="row">
+            <div class="col-md-3">
+                {{ include('/layouts/nav.twig') }}
+            </div>
+            <div class="col-md-9 bg-white border rounded shadow-sm">
+                <div id="blocklist"></div>
+            </div>
+        </div>
+    </div>
+    <script> const users = '{{ users|escape('js') }}';</script>
+    <script src="/dist/blocklist.js"></script>
+{% endblock %}
