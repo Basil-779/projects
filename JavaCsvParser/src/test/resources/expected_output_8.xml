@@ -1,0 +1,15 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<body>
+    <person>
+        <Firstname>Sergey</Firstname>
+        <Lastname>Sergeev</Lastname>
+        <Gender>m</Gender>
+        <Birthdate>1983-11-23</Birthdate>
+    </person>
+    <person>
+        <Firstname>Olga</Firstname>
+        <Lastname>Buzfeed</Lastname>
+        <Gender>f</Gender>
+        <Birthdate>1986-09-28</Birthdate>
+    </person>
+</body>
